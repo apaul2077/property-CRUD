@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import userRoutes from './routes/userRoutes.js'
+import crudRoutes from './routes/crudRoutes.js'
 import connectDB from './config/db.js';
 import cookieParser from 'cookie-parser'
 
@@ -14,7 +15,8 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser())
 app.use(express.urlencoded())
-app.use('/api/', userRoutes);  
+app.use('/api/auth', userRoutes);  
+app.use('/api/property', crudRoutes);
 
 app.get('/', (req, res) => {
     res.send("Hello World!");

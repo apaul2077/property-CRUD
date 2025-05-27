@@ -1,0 +1,95 @@
+import asyncHandler from 'express-async-handler';
+import Property from '../models/propertyModel.js';
+
+const extractNumericId = (propId) => parseInt(propId.replace('PROP', ''), 10);
+
+export const createProperty = asyncHandler(async (req, res) => {
+    const { title, type, price, state, city, areaSqFt, bedrooms, bathrooms, amenities, furnished, availableFrom, tags, colorTheme, rating, isVerified, listingType } = req.body;
+
+    const lastProperty = await Property
+        .find({})
+        .sort({ id: -1 }) 
+        .limit(1);
+
+    let newIdNumber = 1001;
+    if (lastProperty.length > 0) {
+        const lastId = lastProperty[0].id; 
+        newIdNumber = extractNumericId(lastId) + 1;
+    }
+
+    const newId = `PROP${newIdNumber}`;
+    const newProperty = await Property.create({
+        id: newId,
+        title,
+        type,
+        price,
+        state,
+        city,
+        areaSqFt,
+        bedrooms,
+        bathrooms,
+        amenities,
+        furnished: furnished.toLowerCase(),
+        availableFrom,
+        listedBy: req.user._id,
+        tags,
+        colorTheme,
+        rating,
+        isVerified,
+        listingType
+    });
+
+    res.status(201).json(newProperty);
+});
+
+export const updateProperty = asyncHandler(async (req, res) => {
+    const property = await Property.findOne({id: req.params.id});
+    const user = req.user;
+
+    if (!property) {
+        res.status(404);
+        throw new Error('Property not found');
+    }
+
+    if (user.userType !== property.listedBy && user._id.toString() !== property.listedBy.toString()) {
+        res.status(403);
+        throw new Error('Not authorized to update this property');
+    }
+
+    Object.assign(property, req.body);
+    const updatedProperty = await property.save();
+    res.json(updatedProperty);
+});
+
+export const deleteProperty = asyncHandler(async (req, res) => {
+    const property = await Property.findOne({id: req.params.id});
+    const user = req.user;
+
+    if (!property) {
+        res.status(404);
+        throw new Error('Property not found');
+    }
+
+    if (user.userType !== property.listedBy && user._id.toString() !== property.listedBy.toString()) {
+        res.status(403);
+        throw new Error('Not authorized to delete this property');
+    }
+
+    await property.deleteOne();
+    res.json({ message: 'Property deleted' });
+});
+
+export const getAllProperties = asyncHandler(async (req, res) => {
+    const properties = await Property.find({});
+    res.json(properties);
+});
+
+
+export const getPropertyById = asyncHandler(async (req, res) => {
+    const property = await Property.findOne({id: req.params.id});
+    if (!property) {
+        res.status(404);
+        throw new Error('Property not found');
+    }
+    res.json(property);
+});
