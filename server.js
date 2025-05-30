@@ -4,8 +4,10 @@ dotenv.config();
 
 import userRoutes from './routes/userRoutes.js'
 import crudRoutes from './routes/crudRoutes.js'
+import filterRoutes from './routes/filterRoutes.js'
 import connectDB from './config/db.js';
 import cookieParser from 'cookie-parser'
+import favouriteRoutes from './routes/favouritesRoutes.js';
 
 connectDB();
 
@@ -17,6 +19,8 @@ app.use(cookieParser())
 app.use(express.urlencoded())
 app.use('/api/auth', userRoutes);  
 app.use('/api/property', crudRoutes);
+app.use('/api/filter', filterRoutes)
+app.use('/api/favourites', favouriteRoutes);
 
 app.get('/', (req, res) => {
     res.send("Hello World!");

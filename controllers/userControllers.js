@@ -3,13 +3,14 @@ import userModel from '../models/userModel.js';
 import generateToken from '../utils/generateToken.js';
 
 const login = asyncHandler(async  (req, res) => {
-    const {email, password} = req.body;
-    const userExists = await userModel.findOne({ email });
+    const {username, password} = req.body;
+    const userExists = await userModel.findOne({ username });
     if(userExists && await userExists.comparePassword(password, userExists.password)){
         generateToken(res, userExists._id);
         res.status(200).json({
             _id: userExists._id,
             name: userExists.name,
+            username: userExists.username,
             email: userExists.email
         });
     }   
@@ -20,7 +21,7 @@ const login = asyncHandler(async  (req, res) => {
 }); 
 
 const registerUser = asyncHandler(async  (req, res) => {
-    const { name, email, password } = req.body;
+    const { username, name, email, password } = req.body;
     const userExists = await userModel.findOne({ email });
 
     if(userExists){
@@ -28,12 +29,13 @@ const registerUser = asyncHandler(async  (req, res) => {
         throw new Error('User already exists');
     }
 
-    const newUser = await userModel.create({ name, email, password });
+    const newUser = await userModel.create({ username, name, email, password });
     if(newUser){
         generateToken(res, newUser._id);
         res.status(200).json({
             _id: newUser._id,
             name: newUser.name,
+            username: newUser.username,
             email: newUser.email
          });
     }

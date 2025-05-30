@@ -52,8 +52,8 @@ const propertySchema = new mongoose.Schema({
   furnished: {
     type: String,
     required: true,
-    enum: ['furnished', 'semi', 'unfurnished'],
-    default: 'unfurnished'
+    enum: ['Furnished', 'Semi', 'Unfurnished'],
+    default: 'Unfurnished'
   },
   availableFrom: {
     type: Date,

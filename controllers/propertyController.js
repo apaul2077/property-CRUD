@@ -29,9 +29,9 @@ export const createProperty = asyncHandler(async (req, res) => {
         bedrooms,
         bathrooms,
         amenities,
-        furnished: furnished.toLowerCase(),
+        furnished: furnished,
         availableFrom,
-        listedBy: req.user._id,
+        listedBy: req.user.username,
         tags,
         colorTheme,
         rating,
@@ -51,7 +51,7 @@ export const updateProperty = asyncHandler(async (req, res) => {
         throw new Error('Property not found');
     }
 
-    if (user.userType !== property.listedBy && user._id.toString() !== property.listedBy.toString()) {
+    if (user.username !== property.listedBy) {
         res.status(403);
         throw new Error('Not authorized to update this property');
     }
@@ -70,7 +70,7 @@ export const deleteProperty = asyncHandler(async (req, res) => {
         throw new Error('Property not found');
     }
 
-    if (user.userType !== property.listedBy && user._id.toString() !== property.listedBy.toString()) {
+    if (user.username !== property.listedBy) {
         res.status(403);
         throw new Error('Not authorized to delete this property');
     }

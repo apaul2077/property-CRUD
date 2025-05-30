@@ -2,6 +2,13 @@ import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
 
 const userSchema = new mongoose.Schema({
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true
+  },
   name: {
     type: String,
     required: true,
@@ -28,19 +35,16 @@ const userSchema = new mongoose.Schema({
     default: 'user'
   },
 
-  favorites: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Property'
-  }],
+  favorites: [String],
 
   recommendationsSent: [{
     property: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Property'
+      type: String,
+      required: true
     },
     to: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
+      type: String,
+      required: true
     },
     sentAt: {
       type: Date,
@@ -50,14 +54,14 @@ const userSchema = new mongoose.Schema({
 
   recommendationsReceived: [{
     property: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Property'
+      type: String,
+      required: true
     },
-    from: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
+    to: {
+      type: String,
+      required: true
     },
-    receivedAt: {
+    sentAt: {
       type: Date,
       default: Date.now
     }
