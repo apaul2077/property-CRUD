@@ -1,4 +1,4 @@
-# Property Management Server
+# Property Listing System
 
 This backend server handles user authentication, property CRUD operations, search/filtering, favourites, and recommendations using Express, MongoDB, JWT, and Redis.  
 **Live URL**: https://property-crud.onrender.com
