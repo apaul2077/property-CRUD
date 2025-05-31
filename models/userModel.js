@@ -57,7 +57,7 @@ const userSchema = new mongoose.Schema({
       type: String,
       required: true
     },
-    to: {
+    from: {
       type: String,
       required: true
     },

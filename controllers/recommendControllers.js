@@ -39,7 +39,7 @@ export const sendRecommendation = asyncHandler(async (req, res) => {
 
   toUser.recommendationsReceived.push({
     property: propertyId,
-    to: fromUser.username,    
+    from: fromUser.username,    
     sentAt: new Date()
   });
   await toUser.save();
@@ -59,7 +59,7 @@ export const getReceivedRecommendations = asyncHandler(async (req, res) => {
       const prop = await Property.findOne({ id: rec.property });
       return {
         property: prop,
-        fromUsername: rec.to,
+        fromUsername: rec.from,
         sentAt: rec.sentAt
       };
     })
