@@ -1,5 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import Property from '../models/propertyModel.js';
+import redisClient from '../utils/redisClient.js';                   
+import qs from 'qs'; 
 
 const filterProperties = asyncHandler(async (req, res) => {
   const {
@@ -23,6 +25,12 @@ const filterProperties = asyncHandler(async (req, res) => {
   } = req.query;
 
   const query = {};
+  const cacheKey =                                                     
+    'properties:filter:' +                                             
+    qs.stringify(req.query, { sort: (a,b) => a.localeCompare(b) }); 
+
+    const cached = await redisClient.get(cacheKey);                      
+  if (cached) return res.json(JSON.parse(cached));
 
   if (title) query.title = { $regex: title, $options: 'i' };
   if (type) query.type = type;
@@ -59,6 +67,8 @@ const filterProperties = asyncHandler(async (req, res) => {
   }
 
   const properties = await Property.find(query);
+
+  await redisClient.set(cacheKey, JSON.stringify(properties), { EX: 1800 });
   res.json(properties);
 });
 
