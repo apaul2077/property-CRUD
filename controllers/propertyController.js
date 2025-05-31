@@ -93,7 +93,7 @@ export const getAllProperties = asyncHandler(async (req, res) => {
 
 
 export const getPropertyById = asyncHandler(async (req, res) => {
-    const cacheKey = `property:${propId}`;                              
+    const cacheKey = `property:${req.params.id}`;                              
     const cached = await redisClient.get(cacheKey);                     
     if (cached) return res.json(JSON.parse(cached));
 
