@@ -52,7 +52,7 @@ export const updateProperty = asyncHandler(async (req, res) => {
         throw new Error('Property not found');
     }
 
-    if (user.username !== property.listedBy) {
+    if (user.username !== property.listedBy.toLowerCase()) {
         res.status(403);
         throw new Error('Not authorized to update this property');
     }
@@ -71,7 +71,7 @@ export const deleteProperty = asyncHandler(async (req, res) => {
         throw new Error('Property not found');
     }
 
-    if (user.username !== property.listedBy) {
+    if (user.username !== property.listedBy.toLowerCase()) {
         res.status(403);
         throw new Error('Not authorized to delete this property');
     }
