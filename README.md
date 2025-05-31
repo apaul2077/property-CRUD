@@ -78,6 +78,30 @@ POST `/` - Send a property recommendation (requires auth)
 GET `/received` - View received recommendations (requires auth)  
 GET `/sent` - View sent recommendations (requires auth)  
 
+## Owner, Builder, Agent credentials
+To edit fields which have been listed by Owner, Builder, and Agent you have login with following. If a property has been uploaded by you then only you can edit that property.  
+**Owner**
+```
+{
+    "username": "owner",
+    "password": "1234"
+}
+```
+**Builder**
+```
+{
+    "username": "builder",
+    "password": "1234"
+}
+```
+**Agent**
+```
+{
+    "username": "agent",
+    "password": "1234"
+}
+```
+
 ## Caching
 
 Frequently accessed routes like `/api/property`, `/api/property/:id`, and `/api/filter` use Redis to cache responses for improved performance. Cache keys are generated based on query parameters or IDs, and cache is automatically invalidated on create, update, or delete.
